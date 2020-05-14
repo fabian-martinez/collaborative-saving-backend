@@ -10,28 +10,29 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/api/v1/members")
 public class membersController {
 
     @Autowired
     private MembersService membersService;
 
-    @GetMapping("/members")
+    @GetMapping("")
     public ResponseEntity<ResponseMembers> retriveMembers(){
         return new ResponseEntity<ResponseMembers>(membersService.getMembers(), HttpStatus.OK);
     }
 
-    @GetMapping("/members/{member}")
-    public ResponseEntity<ResponseMember> retriveMember(@PathVariable(value = "member") String name){
-        return new ResponseEntity<ResponseMember>(membersService.GetMember(name), HttpStatus.OK);
+    @GetMapping("/{member}")
+    public ResponseEntity<ResponseMember> retriveMember(@PathVariable(value = "member") String user){
+        return new ResponseEntity<ResponseMember>(membersService.GetMember(user), HttpStatus.OK);
     }
 
-    @PostMapping("/members")
+    @PostMapping("")
     public ResponseEntity<ResponseMember> postMember(@RequestBody RequestMember requestMember){
         return new ResponseEntity<ResponseMember>(membersService.CreateMember(requestMember.getMember()), HttpStatus.OK);
     }
 
-    @DeleteMapping("/members/{member}")
-    public ResponseEntity<ResponseMember> deleteMember(@PathVariable(value = "member") String name){
-        return new ResponseEntity<ResponseMember>(membersService.DeleteMember(name), HttpStatus.OK);
+    @DeleteMapping("{member}")
+    public ResponseEntity<ResponseMember> deleteMember(@PathVariable(value = "member") String user){
+        return new ResponseEntity<ResponseMember>(membersService.DeleteMember(user), HttpStatus.OK);
     }
 }

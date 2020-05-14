@@ -6,6 +6,7 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.List;
 
 
-public interface FundMemberRepostory extends CrudRepository<FundMember,Long> {
-    List<FundMember>findByName(String name);
+public interface FundMemberRepository extends CrudRepository<FundMember,Long> {
+    FundMember findByUser(String user);
+
 }

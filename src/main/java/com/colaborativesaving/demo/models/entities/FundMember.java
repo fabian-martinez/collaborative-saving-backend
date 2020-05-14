@@ -14,6 +14,10 @@ public class FundMember {
     private long id;
 
     @NotNull
+    @Column(name = "user", unique = true)
+    private String user;
+
+    @NotNull
     @Column(name = "name")
     private String name;
 
@@ -54,6 +58,14 @@ public class FundMember {
     public void setUpdte(long updte) {
         this.update = updte;
     }
+
+    public long getUpdate() { return update; }
+
+    public void setUpdate(long update) { this.update = update; }
+
+    public String getUser() { return user; }
+
+    public void setUser(String user) { this.user = user; }
 }
 
 
