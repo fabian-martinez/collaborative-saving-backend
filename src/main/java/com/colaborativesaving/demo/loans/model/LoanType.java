@@ -2,9 +2,9 @@ package com.colaborativesaving.demo.loans.model;
 
 public class LoanType {
     private String loanTypeName;
-    private long minInstallmentValue;
-    private int maxNumberInstallments;
-    private double interest;
+    private double minInstallmentValue;
+    private short maxNumberInstallments;
+    private float interest;
 
     public String getLoanTypeName() {
         return loanTypeName;
@@ -14,27 +14,27 @@ public class LoanType {
         this.loanTypeName = loanTypeName;
     }
 
-    public long getMinInstallmentValue() {
+    public double getMinInstallmentValue() {
         return minInstallmentValue;
     }
 
-    public void setMinInstallmentValue(long minInstallmentValue) {
+    public void setMinInstallmentValue(double minInstallmentValue) {
         this.minInstallmentValue = minInstallmentValue;
     }
 
-    public int getMaxNumberInstallments() {
+    public short getMaxNumberInstallments() {
         return maxNumberInstallments;
     }
 
-    public void setMaxNumberInstallments(int maxNumberInstallments) {
+    public void setMaxNumberInstallments(short maxNumberInstallments) {
         this.maxNumberInstallments = maxNumberInstallments;
     }
 
-    public double getInterest() {
+    public float getInterest() {
         return interest;
     }
 
-    public void setInterest(double interest) {
+    public void setInterest(float interest) {
         this.interest = interest;
     }
 }

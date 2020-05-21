@@ -1,8 +1,6 @@
 package com.colaborativesaving.demo.loans.controllers;
 
-import com.colaborativesaving.demo.loans.controllers.contracts.RequestLoan;
-import com.colaborativesaving.demo.loans.controllers.contracts.ResponseLoan;
-import com.colaborativesaving.demo.loans.controllers.contracts.ResponseLoanID;
+import com.colaborativesaving.demo.loans.controllers.contracts.*;
 import com.colaborativesaving.demo.loans.services.LoansService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,5 +23,16 @@ public class LoanControllerImpl implements LoanController {
     public ResponseEntity<ResponseLoan> updateLoan(
             @RequestBody RequestLoan requestLoan, @PathVariable(value = "loanId")long loanId) throws Exception {
         return new ResponseEntity<ResponseLoan>(new ResponseLoan(loansService.updateLoan(requestLoan,loanId)),HttpStatus.OK);
+    }
+
+    @PostMapping("{loanId}/amortization")
+    public ResponseEntity<ResponseAmortization> amortizateLoan(
+            @RequestBody RequestAmortization amortization, @PathVariable(value = "loanId") long loanID) {
+        return new ResponseEntity<ResponseAmortization>(new ResponseAmortization(loansService.amortizeLoan(amortization, loanID)),HttpStatus.OK);
+    }
+
+    @GetMapping("{loanId}/amortization")
+    public ResponseEntity<ResponseAmortization> getAmotization(@PathVariable(value = "loanId") long loanID) {
+        return null;
     }
 }

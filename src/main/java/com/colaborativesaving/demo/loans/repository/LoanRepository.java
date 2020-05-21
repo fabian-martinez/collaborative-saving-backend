@@ -2,6 +2,8 @@ package com.colaborativesaving.demo.loans.repository;
 
 import org.springframework.data.repository.CrudRepository;
 
-public interface LoanRepository extends CrudRepository<LoanDB,Long> {
-    LoanDB findById(long loanId);
+import java.util.UUID;
+
+public interface LoanRepository extends CrudRepository<LoanDB, UUID> {
+    LoanDB findById(String loanId);
 }

@@ -1,30 +1,35 @@
 package com.colaborativesaving.demo.loans.repository;
 
 import com.colaborativesaving.demo.loans.model.LoanType;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import java.util.UUID;
 
 @Entity
 @Table(name = "loan_type")
 public class LoanTypeDB {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+            name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator"
+    )
+    @Column(name = "id", updatable = false, nullable = false)
+    private UUID id;
 
-    @NotNull
     @Column(name = "name", unique = true)
     private String loanTypeName;
 
     @Column(name = "min_installment_value")
-    private long minInstallmentValue;
+    private double minInstallmentValue;
 
     @Column(name = "max_number_installments")
-    private int maxNumberInstallments;
+    private short maxNumberInstallments;
 
-    @Column(name = "interest")
-    private double interest;
+    @Column(name = "shorterest")
+    private float shorterest;
 
 
     public LoanType getLoanType(){
@@ -32,7 +37,7 @@ public class LoanTypeDB {
         loanType.setLoanTypeName(this.loanTypeName);
         loanType.setMaxNumberInstallments(this.maxNumberInstallments);
         loanType.setMinInstallmentValue(this.minInstallmentValue);
-        loanType.setInterest(this.interest);
+        loanType.setInterest(this.shorterest);
         return loanType;
     }
 
@@ -44,35 +49,35 @@ public class LoanTypeDB {
         this.loanTypeName = loanTypeName;
     }
 
-    public long getMinInstallmentValue() {
+    public double getMinInstallmentValue() {
         return minInstallmentValue;
     }
 
-    public void setMinInstallmentValue(long minInstallmentValue) {
+    public void setMinInstallmentValue(double minInstallmentValue) {
         this.minInstallmentValue = minInstallmentValue;
     }
 
-    public int getMaxNumberInstallments() {
+    public short getMaxNumberInstallments() {
         return maxNumberInstallments;
     }
 
-    public void setMaxNumberInstallments(int maxNumberInstallments) {
+    public void setMaxNumberInstallments(short maxNumberInstallments) {
         this.maxNumberInstallments = maxNumberInstallments;
     }
 
-    public double getInterest() {
-        return interest;
+    public float getInterest() {
+        return shorterest;
     }
 
-    public void setInterest(double interest) {
-        this.interest = interest;
+    public void setInterest(float shorterest) {
+        this.shorterest = shorterest;
     }
 
-    public long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 }

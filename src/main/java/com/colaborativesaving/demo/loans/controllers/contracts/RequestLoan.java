@@ -4,8 +4,8 @@ public class RequestLoan {
 
     private String userName;
     private String loanType;
-    private long total;
-    private long advance;
+    private double total;
+    private double advance;
 
     public String getUserName() {
         return userName;
@@ -23,19 +23,19 @@ public class RequestLoan {
         this.loanType = loanType;
     }
 
-    public long getTotal() {
+    public double getTotal() {
         return total;
     }
 
-    public void setTotal(long total) {
+    public void setTotal(double total) {
         this.total = total;
     }
 
-    public long getAdvance() {
+    public double getAdvance() {
         return advance;
     }
 
-    public void setAdvance(long advance) {
+    public void setAdvance(double advance) {
         this.advance = advance;
     }
 }

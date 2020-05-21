@@ -8,12 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class Loan {
     private User user;
     private LoanType loanType;
-    private long installmentValue;
-    private long total;
-    private long balance;
-    private int totalInstallments;
-    private int pendingInstallments;
-    private double interest;
+    private double installmentValue;
+    private double total;
+    private double balance;
+    private short totalInstallments;
+    private short pendingInstallments;
+    private float shorterest;
 
     @Autowired
     private LoanRepository loanRepository;
@@ -35,52 +35,52 @@ public class Loan {
         this.loanType = loanType;
     }
 
-    public long getInstallmentValue() {
+    public double getInstallmentValue() {
         return installmentValue;
     }
 
-    public void setInstallmentValue(long installmentValue) {
+    public void setInstallmentValue(double installmentValue) {
         this.installmentValue = installmentValue;
     }
 
-    public long getTotal() {
+    public double getTotal() {
         return total;
     }
 
-    public void setTotal(long total) {
+    public void setTotal(double total) {
         this.total = total;
     }
 
-    public long getBalance() {
+    public double getBalance() {
         return balance;
     }
 
-    public void setBalance(long balance) {
+    public void setBalance(double balance) {
         this.balance = balance;
     }
 
-    public int getTotalInstallments() {
+    public short getTotalInstallments() {
         return totalInstallments;
     }
 
-    public void setTotalInstallments(int totalInstallments) {
+    public void setTotalInstallments(short totalInstallments) {
         this.totalInstallments = totalInstallments;
     }
 
-    public int getPendingInstallments() {
+    public short getPendingInstallments() {
         return pendingInstallments;
     }
 
-    public void setPendingInstallments(int pendingInstallments) {
+    public void setPendingInstallments(short pendingInstallments) {
         this.pendingInstallments = pendingInstallments;
     }
 
-    public double getInterest() {
-        return interest;
+    public float getInterest() {
+        return shorterest;
     }
 
-    public void setInterest(double interest) {
-        this.interest = interest;
+    public void setInterest(float shorterest) {
+        this.shorterest = shorterest;
     }
 
 }

@@ -1,18 +1,21 @@
 package com.colaborativesaving.demo.loans.services;
 
+import com.colaborativesaving.demo.loans.controllers.contracts.RequestAmortization;
 import com.colaborativesaving.demo.loans.controllers.contracts.RequestLoan;
 import com.colaborativesaving.demo.loans.model.Loan;
 import com.colaborativesaving.demo.loans.model.LoanType;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface LoansService {
     public List<LoanType> getTypes();
     public LoanType createType(LoanType type);
     public LoanType getType(String loanTypeName);
     public LoanType deleteType(String loanTypeName);
-    public long createLoan(RequestLoan loan) throws Exception;
-    public Loan updateLoan(RequestLoan loan, long loanId) throws Exception;
+    public UUID createLoan(RequestLoan loan) throws Exception;
+    public Loan updateLoan(RequestLoan loan, UUID loanId) throws Exception;
+    public Loan amortizeLoan(RequestAmortization amortization, long loanID);
 
     //TODO: amortizeLoan(loanId, requestAmortization) -> retorna tabla amotizada deacuerdo a parametros y reglas
     //          RequesAmortization: numero de cuotas, valor cuotas

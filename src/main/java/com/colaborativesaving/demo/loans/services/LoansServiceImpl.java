@@ -1,8 +1,10 @@
 package com.colaborativesaving.demo.loans.services;
 
+import com.colaborativesaving.demo.loans.controllers.contracts.RequestAmortization;
 import com.colaborativesaving.demo.loans.controllers.contracts.RequestLoan;
 import com.colaborativesaving.demo.loans.model.Loan;
 import com.colaborativesaving.demo.loans.model.LoanType;
+import com.colaborativesaving.demo.loans.model.operators.AmortizationCalc;
 import com.colaborativesaving.demo.loans.repository.LoanDB;
 import com.colaborativesaving.demo.loans.repository.LoanRepository;
 import com.colaborativesaving.demo.loans.repository.LoanTypeDB;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class LoansServiceImpl implements LoansService {
@@ -29,6 +32,9 @@ public class LoansServiceImpl implements LoansService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private AmortizationCalc amortizationCalc;
 
 
     @Override
@@ -70,7 +76,7 @@ public class LoansServiceImpl implements LoansService {
     }
 
     @Override
-    public long createLoan(RequestLoan loan) throws Exception {
+    public UUID createLoan(RequestLoan loan) throws Exception {
         LoanDB loanDB = new LoanDB();
         loanDB.setUser(userRepository.findByUserName(loan.getUserName()));
         loanDB.setLoanType(loanTypeRepository.findByLoanTypeName(loan.getLoanType()));
@@ -81,11 +87,16 @@ public class LoansServiceImpl implements LoansService {
     }
 
     @Override
-    public Loan updateLoan(RequestLoan requestLoan, long loanId) throws Exception {
-        LoanDB loanDB = loanRepository.findById(loanId);
+    public Loan updateLoan(RequestLoan requestLoan, UUID loanId) throws Exception {
+        LoanDB loanDB = loanRepository.findById(loanId.toString());
         loanDB.setBalance(loanDB.getBalance() + requestLoan.getAdvance());
         if (requestLoan.getTotal() > 0)
             loanDB.setTotal(requestLoan.getTotal());
         return loanRepository.save(loanDB).getLoan();
+    }
+
+    @Override
+    public Loan amortizeLoan(RequestAmortization amortization, long loanID) {
+        return null;
     }
 }

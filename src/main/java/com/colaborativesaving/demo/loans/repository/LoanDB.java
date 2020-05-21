@@ -1,20 +1,24 @@
 package com.colaborativesaving.demo.loans.repository;
 
 import com.colaborativesaving.demo.loans.model.Loan;
-import com.colaborativesaving.demo.loans.model.LoanType;
-import com.colaborativesaving.demo.users.model.User;
 import com.colaborativesaving.demo.users.repository.UserDB;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import java.util.UUID;
 
 @Entity
 @Table(name = "loan")
 public class LoanDB {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+            name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator"
+    )
+    @Column(name = "id", updatable = false, nullable = false)
+    private UUID id;
 
     @ManyToOne(optional = false)
     private UserDB user;
@@ -23,28 +27,28 @@ public class LoanDB {
     private LoanTypeDB loanType;
 
     @Column(name = "installment_value")
-    private long installmentValue;
+    private double installmentValue;
 
     @Column(name = "total")
-    private long total;
+    private double total;
 
     @Column(name = "balance")
-    private long balance;
+    private double balance;
 
     @Column(name = "total_installment")
-    private int totalInstallments;
+    private short totalInstallments;
 
     @Column(name = "pendings_installment")
-    private int pendingInstallments;
+    private short pendingInstallments;
 
-    @Column(name = "interest")
-    private double interest;
+    @Column(name = "shorterest")
+    private float shorterest;
 
-    public long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -64,52 +68,52 @@ public class LoanDB {
         this.loanType = loanType;
     }
 
-    public long getInstallmentValue() {
+    public double getInstallmentValue() {
         return installmentValue;
     }
 
-    public void setInstallmentValue(long installmentValue) {
+    public void setInstallmentValue(double installmentValue) {
         this.installmentValue = installmentValue;
     }
 
-    public long getTotal() {
+    public double getTotal() {
         return total;
     }
 
-    public void setTotal(long total) {
+    public void setTotal(double total) {
         this.total = total;
     }
 
-    public long getBalance() {
+    public double getBalance() {
         return balance;
     }
 
-    public void setBalance(long balance) {
+    public void setBalance(double balance) {
         this.balance = balance;
     }
 
-    public int getTotalInstallments() {
+    public short getTotalInstallments() {
         return totalInstallments;
     }
 
-    public void setTotalInstallments(int totalInstallments) {
+    public void setTotalInstallments(short totalInstallments) {
         this.totalInstallments = totalInstallments;
     }
 
-    public int getPendingInstallments() {
+    public short getPendingInstallments() {
         return pendingInstallments;
     }
 
-    public void setPendingInstallments(int pendingInstallments) {
+    public void setPendingInstallments(short pendingInstallments) {
         this.pendingInstallments = pendingInstallments;
     }
 
-    public double getInterest() {
-        return interest;
+    public float getInterest() {
+        return shorterest;
     }
 
-    public void setInterest(double interest) {
-        this.interest = interest;
+    public void setInterest(float shorterest) {
+        this.shorterest = shorterest;
     }
 
     public Loan getLoan() throws Exception {
@@ -119,7 +123,7 @@ public class LoanDB {
         loan.setBalance(this.balance);
         loan.setLoanType(this.loanType.getLoanType());
         loan.setInstallmentValue(this.installmentValue);
-        loan.setInterest(this.interest);
+        loan.setInterest(this.shorterest);
         loan.setPendingInstallments(this.pendingInstallments);
         loan.setTotalInstallments(this.totalInstallments);
         return loan;

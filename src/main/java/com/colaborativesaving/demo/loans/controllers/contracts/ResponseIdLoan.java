@@ -1,17 +1,19 @@
 package com.colaborativesaving.demo.loans.controllers.contracts;
 
-public class ResponseIdLoan {
-    private long idLoan;
+import java.util.UUID;
 
-    public ResponseIdLoan(long id) {
+public class ResponseIdLoan {
+    private UUID idLoan;
+
+    public ResponseIdLoan(UUID id) {
         this.idLoan = id;
     }
 
-    public long getIdLoan() {
+    public UUID getIdLoan() {
         return idLoan;
     }
 
-    public void setIdLoan(long idLoan) {
+    public void setIdLoan(UUID idLoan) {
         this.idLoan = idLoan;
     }
 
