@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/api/v1/loans")
 public class LoanControllerImpl implements LoanController {
@@ -19,9 +21,14 @@ public class LoanControllerImpl implements LoanController {
         return new ResponseEntity<ResponseLoanID>(new ResponseLoanID(loansService.createLoan(requestLoan)), HttpStatus.OK);
     }
 
+    @Override
+    public ResponseEntity<ResponseLoan> updateLoan(RequestLoan requestLoan, long loanId) throws Exception {
+        return null;
+    }
+
     @PutMapping("{loanId}")
     public ResponseEntity<ResponseLoan> updateLoan(
-            @RequestBody RequestLoan requestLoan, @PathVariable(value = "loanId")long loanId) throws Exception {
+            @RequestBody RequestLoan requestLoan, @PathVariable(value = "loanId") UUID loanId) throws Exception {
         return new ResponseEntity<ResponseLoan>(new ResponseLoan(loansService.updateLoan(requestLoan,loanId)),HttpStatus.OK);
     }
 

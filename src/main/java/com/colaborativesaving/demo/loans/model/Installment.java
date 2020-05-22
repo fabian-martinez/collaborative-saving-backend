@@ -3,9 +3,20 @@ package com.colaborativesaving.demo.loans.model;
 public class Installment {
     private double balance;
     private double abonoCapital;
-    private double shorterest;
+    private double interest;
     private double total;
     private short installmentNumber;
+
+    public Installment(double balance, double abonoCapital, double interest, double total, short installmentNumber) {
+        this.balance = balance;
+        this.abonoCapital = abonoCapital;
+        this.interest = interest;
+        this.total = total;
+        this.installmentNumber = installmentNumber;
+    }
+
+    public Installment() {
+    }
 
     public double getBalance() {
         return balance;
@@ -24,11 +35,11 @@ public class Installment {
     }
 
     public double getInterest() {
-        return shorterest;
+        return interest;
     }
 
     public void setInterest(double shorterest) {
-        this.shorterest = shorterest;
+        this.interest = shorterest;
     }
 
     public double getTotal() {
@@ -47,4 +58,14 @@ public class Installment {
         this.installmentNumber = installmentNumber;
     }
 
+    @Override
+    public String toString() {
+        return "Installment{" +
+                "balance=" + balance +
+                ", abonoCapital=" + abonoCapital +
+                ", interest=" + interest +
+                ", total=" + total +
+                ", installmentNumber=" + installmentNumber +
+                '}';
+    }
 }
