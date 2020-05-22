@@ -19,7 +19,7 @@ public class AmortizationCalc {
         installments.add(new Installment(
                 balance,iniInstalment,interestValue,total, (short) 1));
 
-        for (short i = 1; i <= installmentsNumber; i++){
+        for (short i = 1; i < installmentsNumber; i++){
             interestValue = Math.round(balance*interest);
             balance = balance - installmentValue;
             total = balance + interestValue;
