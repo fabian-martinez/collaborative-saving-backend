@@ -5,7 +5,7 @@ import com.colaborativesaving.demo.loans.model.LoanType;
 public class ResponseLoanType {
 
     private String name;
-    private short number;
+    private int number;
     private double installment;
 
     public ResponseLoanType(LoanType type) {
@@ -22,11 +22,11 @@ public class ResponseLoanType {
         this.name = name;
     }
 
-    public short getNumber() {
+    public int getNumber() {
         return number;
     }
 
-    public void setNumber(short number) {
+    public void setNumber(int number) {
         this.number = number;
     }
 

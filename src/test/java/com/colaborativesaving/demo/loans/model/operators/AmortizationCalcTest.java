@@ -1,7 +1,10 @@
 package com.colaborativesaving.demo.loans.model.operators;
 
 import com.colaborativesaving.demo.loans.model.Installment;
+import com.colaborativesaving.demo.loans.model.Loan;
+import com.colaborativesaving.demo.loans.model.LoanType;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
@@ -17,8 +20,8 @@ class AmortizationCalcTest {
     @Test
     void amortize() {
         List<Installment> amort = new ArrayList<Installment>();
-        amortizationCalc = new AmortizationCalc();
-        amort = amortizationCalc.Amortize(10000000, (float)(1.5/100.0),450000,(short) 20);
-        System.out.println(amort.toString());
+        Loan loan = new Loan();
+        LoanType loanType = new LoanType();
+        amortizationCalc.Amortize(loan,450000.0);
     }
 }

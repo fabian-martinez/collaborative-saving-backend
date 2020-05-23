@@ -5,14 +5,16 @@ public class Installment {
     private double abonoCapital;
     private double interest;
     private double total;
-    private short installmentNumber;
+    private int installmentNumber;
+    private InstalmentStateEnum instalmentState;
 
-    public Installment(double balance, double abonoCapital, double interest, double total, short installmentNumber) {
+    public Installment(double balance, double abonoCapital, double interest, double total, int installmentNumber) {
         this.balance = balance;
         this.abonoCapital = abonoCapital;
         this.interest = interest;
         this.total = total;
         this.installmentNumber = installmentNumber;
+        this.instalmentState = InstalmentStateEnum.PENDING;
     }
 
     public Installment() {
@@ -50,22 +52,30 @@ public class Installment {
         this.total = total;
     }
 
-    public short getInstallmentNumber() {
+    public int getInstallmentNumber() {
         return installmentNumber;
     }
 
-    public void setInstallmentNumber(short installmentNumber) {
+    public void setInstallmentNumber(int installmentNumber) {
         this.installmentNumber = installmentNumber;
+    }
+
+    public InstalmentStateEnum getInstalmentState() {
+        return instalmentState;
+    }
+
+    public void setInstalmentState(InstalmentStateEnum instalmentState) {
+        this.instalmentState = instalmentState;
     }
 
     @Override
     public String toString() {
-        return "Installment{" +
-                "balance=" + balance +
-                ", abonoCapital=" + abonoCapital +
-                ", interest=" + interest +
-                ", total=" + total +
-                ", installmentNumber=" + installmentNumber +
+        return "Installment:{" +
+                "balance:" + balance +
+                ", abonoCapital:" + abonoCapital +
+                ", interest:" + interest +
+                ", total:" + total +
+                ", installmentNumber:" + installmentNumber +
                 '}';
     }
 }

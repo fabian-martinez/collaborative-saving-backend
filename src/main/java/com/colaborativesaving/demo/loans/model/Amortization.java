@@ -1,13 +1,8 @@
-package com.colaborativesaving.demo.loans.controllers.contracts;
-
-import com.colaborativesaving.demo.loans.model.Amortization;
-import com.colaborativesaving.demo.loans.model.Installment;
-import com.colaborativesaving.demo.loans.model.Loan;
+package com.colaborativesaving.demo.loans.model;
 
 import java.util.List;
 
-public class ResponseAmortization {
-
+public class Amortization {
     private String userName;
     private String loanType;
     private double total;
@@ -16,6 +11,16 @@ public class ResponseAmortization {
     private double totalInstallments;
 
     private List<Installment> installments;
+
+    public Amortization(Loan loan, List<Installment> amortization) {
+        this.userName = loan.getUser().getUserName();
+        this.totalInstallments = loan.getTotalInstallments();
+        this.loanType = loan.getLoanType().getLoanTypeName();
+        this.total = loan.getTotal();
+        this.installmentValue = loan.getInstallmentValue();
+        this.interest = loan.getInterest();
+        this.installments = amortization;
+    }
 
     public String getUserName() {
         return userName;
@@ -71,15 +76,5 @@ public class ResponseAmortization {
 
     public void setInstallments(List<Installment> installments) {
         this.installments = installments;
-    }
-
-    public ResponseAmortization(Amortization amortization) {
-        this.userName = amortization.getUserName();
-        this.totalInstallments = amortization.getTotalInstallments();
-        this.loanType = amortization.getLoanType();
-        this.total = amortization.getTotal();
-        this.installmentValue = amortization.getInstallmentValue();
-        this.interest = amortization.getInterest();
-        this.installments = amortization.getInstallments();
     }
 }

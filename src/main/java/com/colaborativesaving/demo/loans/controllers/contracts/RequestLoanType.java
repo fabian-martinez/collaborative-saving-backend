@@ -5,9 +5,9 @@ import com.colaborativesaving.demo.loans.model.LoanType;
 public class RequestLoanType {
 
     private String name;
-    private short number;
+    private int number;
     private double installment;
-    private float interest;
+    private double interest;
 
     public LoanType getType() {
         LoanType loanType = new LoanType();
@@ -24,7 +24,7 @@ public class RequestLoanType {
 
     public int getNumber() { return number; }
 
-    public void setNumber(short number) { this.number = number; }
+    public void setNumber(int number) { this.number = number; }
 
     public double getInstallment() { return installment; }
 
@@ -34,5 +34,5 @@ public class RequestLoanType {
         return interest;
     }
 
-    public void setInterest(float interest) { this.interest = interest; }
+    public void setInterest(double interest) { this.interest = interest; }
 }

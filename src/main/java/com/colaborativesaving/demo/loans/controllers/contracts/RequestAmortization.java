@@ -3,7 +3,7 @@ package com.colaborativesaving.demo.loans.controllers.contracts;
 public class RequestAmortization {
 
     private double installmentValue;
-    private short numberInstallments;
+    private int numberInstallments;
 
     public double getInstallmentValue() {
         return installmentValue;
@@ -13,11 +13,11 @@ public class RequestAmortization {
         this.installmentValue = installmentValue;
     }
 
-    public short getNumberInstallments() {
+    public int getNumberInstallments() {
         return numberInstallments;
     }
 
-    public void setNumberInstallments(short numberInstallments) {
+    public void setNumberInstallments(int numberInstallments) {
         this.numberInstallments = numberInstallments;
     }
 }

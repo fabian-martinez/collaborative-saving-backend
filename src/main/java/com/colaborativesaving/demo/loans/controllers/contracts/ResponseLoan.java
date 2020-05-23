@@ -1,23 +1,21 @@
 package com.colaborativesaving.demo.loans.controllers.contracts;
 
 import com.colaborativesaving.demo.loans.model.Loan;
-import com.colaborativesaving.demo.loans.model.LoanType;
-import com.colaborativesaving.demo.users.model.User;
 
 public class ResponseLoan {
 
-    private User user;
-    private LoanType loanType;
+    private String user;
+    private String loanType;
     private double installmentValue;
     private double total;
     private double balance;
-    private short totalInstallments;
-    private short pendingInstallments;
-    private float shorterest;
+    private int totalInstallments;
+    private int pendingInstallments;
+    private double shorterest;
 
     public ResponseLoan(Loan updateLoan) {
-        this.user = updateLoan.getUser();
-        this.loanType = updateLoan.getLoanType();
+        this.user = updateLoan.getUser().getUserName();
+        this.loanType = updateLoan.getLoanType().getLoanTypeName();
         this.installmentValue = updateLoan.getInstallmentValue();
         this.total = updateLoan.getTotal();
         this.balance = updateLoan.getBalance();
@@ -26,19 +24,19 @@ public class ResponseLoan {
         this.shorterest = updateLoan.getInterest();
     }
 
-    public User getUser() {
+    public String getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(String user) {
         this.user = user;
     }
 
-    public LoanType getLoanType() {
+    public String getLoanType() {
         return loanType;
     }
 
-    public void setLoanType(LoanType loanType) {
+    public void setLoanType(String loanType) {
         this.loanType = loanType;
     }
 
@@ -66,27 +64,28 @@ public class ResponseLoan {
         this.balance = balance;
     }
 
-    public short getTotalInstallments() {
+    public int getTotalInstallments() {
         return totalInstallments;
     }
 
-    public void setTotalInstallments(short totalInstallments) {
+    public void setTotalInstallments(int totalInstallments) {
         this.totalInstallments = totalInstallments;
     }
 
-    public short getPendingInstallments() {
+    public int getPendingInstallments() {
         return pendingInstallments;
     }
 
-    public void setPendingInstallments(short pendingInstallments) {
+    public void setPendingInstallments(int pendingInstallments) {
         this.pendingInstallments = pendingInstallments;
     }
 
-    public float getInterest() {
+    public double getInterest() {
         return shorterest;
     }
 
-    public void setInterest(float shorterest) {
+    public void setInterest(double shorterest) {
         this.shorterest = shorterest;
     }
+
 }

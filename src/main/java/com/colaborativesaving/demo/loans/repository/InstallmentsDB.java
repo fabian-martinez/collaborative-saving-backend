@@ -1,15 +1,15 @@
 package com.colaborativesaving.demo.loans.repository;
 
-import com.colaborativesaving.demo.loans.model.Loan;
-import com.colaborativesaving.demo.users.repository.UserDB;
+import com.colaborativesaving.demo.loans.model.Installment;
+import com.colaborativesaving.demo.loans.model.InstalmentStateEnum;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
-@Table(name = "loan")
-public class LoanDB {
+@Table(name = "installment")
+public class InstallmentsDB {
 
     @Id
     @GeneratedValue(generator = "UUID")
@@ -21,13 +21,10 @@ public class LoanDB {
     private UUID id;
 
     @ManyToOne(optional = false)
-    private UserDB user;
+    private LoanDB loanDB;
 
-    @ManyToOne
-    private LoanTypeDB loanType;
-
-    @Column(name = "payment")
-    private double payment;
+    @Column(name = "state")
+    private int state;
 
     @Column(name = "installment_value")
     private double installmentValue;
@@ -38,14 +35,13 @@ public class LoanDB {
     @Column(name = "balance")
     private double balance;
 
-    @Column(name = "total_installment")
-    private int totalInstallments;
 
     @Column(name = "pendings_installment")
     private int pendingInstallments;
 
     @Column(name = "interest")
     private double interest;
+
 
     public UUID getId() {
         return id;
@@ -55,20 +51,20 @@ public class LoanDB {
         this.id = id;
     }
 
-    public UserDB getUser() {
-        return user;
+    public LoanDB getLoanDB() {
+        return loanDB;
     }
 
-    public void setUser(UserDB user) {
-        this.user = user;
+    public void setLoanDB(LoanDB loanDB) {
+        this.loanDB = loanDB;
     }
 
-    public LoanTypeDB getLoanType() {
-        return loanType;
+    public int getState() {
+        return state;
     }
 
-    public void setLoanType(LoanTypeDB loanType) {
-        this.loanType = loanType;
+    public void setState(int state) {
+        this.state = state;
     }
 
     public double getInstallmentValue() {
@@ -95,14 +91,6 @@ public class LoanDB {
         this.balance = balance;
     }
 
-    public int getTotalInstallments() {
-        return totalInstallments;
-    }
-
-    public void setTotalInstallments(int totalInstallments) {
-        this.totalInstallments = totalInstallments;
-    }
-
     public int getPendingInstallments() {
         return pendingInstallments;
     }
@@ -119,26 +107,24 @@ public class LoanDB {
         this.interest = interest;
     }
 
-    public Loan getLoan() throws Exception {
-        Loan loan = new Loan();
-        loan.setUser(this.user.getUser());
-        loan.setTotal(this.total);
-        loan.setBalance(this.balance);
-        loan.setLoanType(this.loanType.getLoanType());
-        loan.setInstallmentValue(this.installmentValue);
-        loan.setPayment(this.payment);
-        loan.setInterest(this.interest);
-        loan.setPendingInstallments(this.pendingInstallments);
-        loan.setTotalInstallments(this.totalInstallments);
-        return loan;
+    public void setInstallment(Installment installment) {
+        this.total = installment.getTotal();
+        this.state = installment.getInstalmentState().getCode();
+        this.pendingInstallments = installment.getInstallmentNumber();
+        this.interest = installment.getInterest();
+        this.installmentValue = installment.getAbonoCapital();
+        this.balance = installment.getBalance();
     }
 
-    public void setLoan(Loan loan) {
-        this.balance = loan.getBalance();
-        this.total = loan.getTotal();
-        this.payment = loan.getPayment();
-        this.installmentValue = loan.getInstallmentValue();
-        this.totalInstallments = loan.getTotalInstallments();
-        this.pendingInstallments = loan.getPendingInstallments();
+    public Installment getInstalment() throws Exception {
+        Installment installment = new Installment();
+        installment.setInstalmentState(InstalmentStateEnum.fromInteger(this.state));
+        installment.setInstallmentNumber(this.pendingInstallments);
+        installment.setAbonoCapital(this.installmentValue);
+        installment.setBalance(this.balance);
+        installment.setInterest(this.interest);
+        installment.setTotal(this.state);
+
+        return installment;
     }
 }

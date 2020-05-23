@@ -2,18 +2,18 @@ package com.colaborativesaving.demo.loans.model;
 
 import com.colaborativesaving.demo.loans.repository.LoanRepository;
 import com.colaborativesaving.demo.users.model.User;
-import com.colaborativesaving.demo.users.repository.UserDB;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class Loan {
     private User user;
     private LoanType loanType;
+    private double payment;
     private double installmentValue;
     private double total;
     private double balance;
-    private short totalInstallments;
-    private short pendingInstallments;
-    private float shorterest;
+    private int totalInstallments;
+    private int pendingInstallments;
+    private double interest;
 
     @Autowired
     private LoanRepository loanRepository;
@@ -59,28 +59,35 @@ public class Loan {
         this.balance = balance;
     }
 
-    public short getTotalInstallments() {
+    public int getTotalInstallments() {
         return totalInstallments;
     }
 
-    public void setTotalInstallments(short totalInstallments) {
+    public void setTotalInstallments(int totalInstallments) {
         this.totalInstallments = totalInstallments;
     }
 
-    public short getPendingInstallments() {
+    public int getPendingInstallments() {
         return pendingInstallments;
     }
 
-    public void setPendingInstallments(short pendingInstallments) {
+    public void setPendingInstallments(int pendingInstallments) {
         this.pendingInstallments = pendingInstallments;
     }
 
-    public float getInterest() {
-        return shorterest;
+    public double getInterest() {
+        return interest;
     }
 
-    public void setInterest(float shorterest) {
-        this.shorterest = shorterest;
+    public void setInterest(double shorterest) {
+        this.interest = shorterest;
     }
 
+    public double getPayment() {
+        return payment;
+    }
+
+    public void setPayment(double payment) {
+        this.payment = payment;
+    }
 }

@@ -26,18 +26,33 @@ public class LoanTypeDB {
     private double minInstallmentValue;
 
     @Column(name = "max_number_installments")
-    private short maxNumberInstallments;
+    private int maxNumberInstallments;
 
-    @Column(name = "shorterest")
-    private float shorterest;
+    @Column(name = "interest")
+    private double interest;
 
+    public LoanTypeDB(LoanType loanType) {
+        this.interest = loanType.getInterest();
+        this.loanTypeName = loanType.getLoanTypeName();
+        this.maxNumberInstallments = loanType.getMaxNumberInstallments();
+        this.minInstallmentValue = loanType.getMinInstallmentValue();
+    }
+
+    public LoanTypeDB(){}
+
+    public void setLoanType(LoanType loanType){
+        this.interest = loanType.getInterest();
+        this.loanTypeName = loanType.getLoanTypeName();
+        this.maxNumberInstallments = loanType.getMaxNumberInstallments();
+        this.minInstallmentValue = loanType.getMinInstallmentValue();
+    }
 
     public LoanType getLoanType(){
         LoanType loanType = new LoanType();
         loanType.setLoanTypeName(this.loanTypeName);
         loanType.setMaxNumberInstallments(this.maxNumberInstallments);
         loanType.setMinInstallmentValue(this.minInstallmentValue);
-        loanType.setInterest(this.shorterest);
+        loanType.setInterest(this.interest);
         return loanType;
     }
 
@@ -57,20 +72,20 @@ public class LoanTypeDB {
         this.minInstallmentValue = minInstallmentValue;
     }
 
-    public short getMaxNumberInstallments() {
+    public int getMaxNumberInstallments() {
         return maxNumberInstallments;
     }
 
-    public void setMaxNumberInstallments(short maxNumberInstallments) {
+    public void setMaxNumberInstallments(int maxNumberInstallments) {
         this.maxNumberInstallments = maxNumberInstallments;
     }
 
-    public float getInterest() {
-        return shorterest;
+    public double getInterest() {
+        return interest;
     }
 
-    public void setInterest(float shorterest) {
-        this.shorterest = shorterest;
+    public void setInterest(double interest) {
+        this.interest = interest;
     }
 
     public UUID getId() {

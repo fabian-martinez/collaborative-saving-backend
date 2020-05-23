@@ -2,23 +2,25 @@ package com.colaborativesaving.demo.loans.services;
 
 import com.colaborativesaving.demo.loans.controllers.contracts.RequestAmortization;
 import com.colaborativesaving.demo.loans.controllers.contracts.RequestLoan;
+import com.colaborativesaving.demo.loans.controllers.contracts.ResponseAmortization;
+import com.colaborativesaving.demo.loans.model.Amortization;
+import com.colaborativesaving.demo.loans.model.Installment;
 import com.colaborativesaving.demo.loans.model.Loan;
 import com.colaborativesaving.demo.loans.model.LoanType;
 import com.colaborativesaving.demo.loans.model.operators.AmortizationCalc;
-import com.colaborativesaving.demo.loans.repository.LoanDB;
-import com.colaborativesaving.demo.loans.repository.LoanRepository;
-import com.colaborativesaving.demo.loans.repository.LoanTypeDB;
-import com.colaborativesaving.demo.loans.repository.LoanTypeRepository;
+import com.colaborativesaving.demo.loans.repository.*;
 import com.colaborativesaving.demo.users.repository.UserRepository;
 import com.colaborativesaving.demo.users.services.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 @Service
+@Transactional
 public class LoansServiceImpl implements LoansService {
 
     @Autowired
@@ -26,6 +28,9 @@ public class LoansServiceImpl implements LoansService {
 
     @Autowired
     private LoanRepository loanRepository;
+
+    @Autowired
+    private InstallmentRepository installmentRepository;
 
     @Autowired
     private UsersService usersService;
@@ -88,15 +93,37 @@ public class LoansServiceImpl implements LoansService {
 
     @Override
     public Loan updateLoan(RequestLoan requestLoan, UUID loanId) throws Exception {
-        LoanDB loanDB = loanRepository.findById(loanId.toString());
-        loanDB.setBalance(loanDB.getBalance() + requestLoan.getAdvance());
-        if (requestLoan.getTotal() > 0)
+        LoanDB loanDB = loanRepository.findById(loanId);
+        double balance = loanDB.getBalance() + requestLoan.getAdvance();
+        loanDB.setBalance(balance);
+        if (requestLoan.getTotal() >= balance)
             loanDB.setTotal(requestLoan.getTotal());
         return loanRepository.save(loanDB).getLoan();
     }
 
     @Override
-    public Loan amortizeLoan(RequestAmortization amortization, long loanID) {
-        return null;
+    public Amortization amortizeLoan(RequestAmortization amortization, UUID loanId) throws Exception {
+        Loan loan = loanRepository.findById(loanId).getLoan();
+        loan.setTotal(loan.getBalance());
+        if (amortization.getNumberInstallments() > 0 && amortization.getInstallmentValue() > 0) {
+            amortizationCalc.Amortize(loan,amortization.getInstallmentValue(),amortization.getNumberInstallments());
+        } else if (amortization.getNumberInstallments() > 0){
+            amortizationCalc.Amortize(loan,amortization.getNumberInstallments());
+        } else if (amortization.getInstallmentValue() > 0){
+            amortizationCalc.Amortize(loan,amortization.getInstallmentValue());
+        } else {
+          //TODO: error
+        }
+        LoanDB loanDB = loanRepository.findById(loanId);
+        Amortization amortization_ = new Amortization(loanRepository.save(loanDB).getLoan(),amortizationCalc.getAmortization(loan));
+        installmentRepository.deleteByLoanDBId(loanDB.getId());
+        for (Installment installment : amortization_.getInstallments()){
+            InstallmentsDB installmentDB = new InstallmentsDB();
+            installmentDB.setLoanDB(loanDB);
+            installmentDB.setInstallment(installment);
+            installmentRepository.save(installmentDB);
+        }
+        loanDB.setLoan(loan);
+        return amortization_;
     }
 }
