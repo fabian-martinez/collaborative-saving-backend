@@ -1,6 +1,6 @@
 package com.colaborativesaving.demo.shares.model;
 
-public class Share {
+public class ShareType {
     private String shareName;
     private int cnt;
     private double contribution;

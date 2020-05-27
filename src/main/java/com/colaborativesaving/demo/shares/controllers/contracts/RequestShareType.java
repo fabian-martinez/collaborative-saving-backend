@@ -1,6 +1,8 @@
 package com.colaborativesaving.demo.shares.controllers.contracts;
 
-public class RequestShare {
+import com.colaborativesaving.demo.shares.model.ShareType;
+
+public class RequestShareType {
     private String name;
     private double contribution;
 
@@ -18,5 +20,12 @@ public class RequestShare {
 
     public void setContribution(double contribution) {
         this.contribution = contribution;
+    }
+
+    public ShareType getShareType() {
+        ShareType shareType = new ShareType();
+        shareType.setShareName(this.name);
+        shareType.setContribution(this.contribution);
+        return shareType;
     }
 }
