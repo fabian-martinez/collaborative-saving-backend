@@ -1,23 +1,21 @@
 package com.colaborativesaving.demo.users.controllers.contracts;
 
 
-import com.colaborativesaving.demo.users.model.User;
-
-import java.util.List;
+import com.colaborativesaving.demo.users.model.UsersMapper;
 
 public class ResponseUsers {
 
-    public List<User> getUsers() {
+    public UsersMapper getUsers() {
         return users;
     }
 
-    public void setUsers(List<User> users) {
+    public void setUsers(UsersMapper users) {
         this.users = users;
     }
 
-    public ResponseUsers(List<User> users) {
+    public ResponseUsers(UsersMapper users) {
         this.users = users;
     }
 
-    private List<User> users;
+    private UsersMapper users;
 }

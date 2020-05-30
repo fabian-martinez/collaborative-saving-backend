@@ -2,9 +2,23 @@ package com.colaborativesaving.demo.shares.model;
 
 import com.colaborativesaving.demo.users.model.User;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "stock")
 public class UserStock {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
+
+    @ManyToOne(optional = false)
     private User user;
+
+    @ManyToOne(optional = false)
     private ShareType share;
+
+    @Column(name = "cnt")
     private int cnt;
 
     public User getUser() {

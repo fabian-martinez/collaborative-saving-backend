@@ -2,8 +2,10 @@ package com.colaborativesaving.demo.loans.controllers.contracts;
 
 import com.colaborativesaving.demo.loans.model.Amortization;
 import com.colaborativesaving.demo.loans.model.Installment;
+import com.colaborativesaving.demo.loans.model.InstallmentMapper;
 import com.colaborativesaving.demo.loans.model.Loan;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ResponseAmortization {
@@ -15,7 +17,7 @@ public class ResponseAmortization {
     private double installmentValue;
     private double totalInstallments;
 
-    private List<Installment> installments;
+    private List<InstallmentMapper> installments;
 
     public String getUserName() {
         return userName;
@@ -65,11 +67,11 @@ public class ResponseAmortization {
         this.totalInstallments = totalInstallments;
     }
 
-    public List<Installment> getInstallments() {
+    public List<InstallmentMapper> getInstallments() {
         return installments;
     }
 
-    public void setInstallments(List<Installment> installments) {
+    public void setInstallments(List<InstallmentMapper> installments) {
         this.installments = installments;
     }
 
@@ -80,6 +82,13 @@ public class ResponseAmortization {
         this.total = amortization.getTotal();
         this.installmentValue = amortization.getInstallmentValue();
         this.interest = amortization.getInterest();
-        this.installments = amortization.getInstallments();
+        this.installments = new ArrayList<InstallmentMapper>();
+        amortization.getInstallments().forEach(installment -> {
+            try {
+                installments.add(new InstallmentMapper(installment));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
     }
 }

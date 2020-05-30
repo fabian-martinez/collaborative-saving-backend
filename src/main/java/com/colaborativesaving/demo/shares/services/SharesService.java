@@ -3,6 +3,7 @@ package com.colaborativesaving.demo.shares.services;
 import com.colaborativesaving.demo.shares.controllers.contracts.RequestStock;
 import com.colaborativesaving.demo.shares.model.ShareType;
 import com.colaborativesaving.demo.shares.model.UserStock;
+import com.colaborativesaving.demo.shares.model.UserStockMapper;
 
 import java.util.List;
 
@@ -12,10 +13,10 @@ public interface SharesService {
     public List<ShareType> getShareTypes();
     public ShareType setShareType(String shareName, ShareType shareType);
 
-    public UserStock purchaseStock(RequestStock requestStock) throws Exception;
-    public UserStock retireStock(RequestStock requestRetireStock);
-    public UserStock getStockForUser(String userName, String shareName) throws Exception;
-    public List<UserStock> getAllStocksForUser(String userName);
-    public List<UserStock> getAllStocksForShareType(String shareName);
-    public List<UserStock> getAllStocks();
+    public UserStockMapper purchaseStock(RequestStock requestStock) throws Exception;
+    public UserStockMapper retireStock(RequestStock requestRetireStock);
+    public UserStockMapper getStockForUser(String userName, String shareName) throws Exception;
+    public List<UserStockMapper> getAllStocksForUser(String userName);
+    public List<UserStockMapper> getAllStocksForShareType(String shareName) throws Exception;
+    public List<UserStockMapper> getAllStocks();
 }

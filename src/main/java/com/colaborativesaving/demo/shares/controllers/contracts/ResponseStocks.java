@@ -1,22 +1,23 @@
 package com.colaborativesaving.demo.shares.controllers.contracts;
 
 import com.colaborativesaving.demo.shares.model.UserStock;
+import com.colaborativesaving.demo.shares.model.UserStockMapper;
 
 import java.util.List;
 
 public class ResponseStocks {
 
-    List<UserStock> userStocks;
+    List<UserStockMapper> userStocks;
 
-    public ResponseStocks(List<UserStock> allStocks) {
+    public ResponseStocks(List<UserStockMapper> allStocks) {
         this.userStocks = allStocks;
     }
 
-    public List<UserStock> getUserStocks() {
+    public List<UserStockMapper> getUserStocks() {
         return userStocks;
     }
 
-    public void setUserStocks(List<UserStock> userStocks) {
+    public void setUserStocks(List<UserStockMapper> userStocks) {
         this.userStocks = userStocks;
     }
 }

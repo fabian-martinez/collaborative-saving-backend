@@ -8,6 +8,6 @@ import org.springframework.http.ResponseEntity;
 public interface UserController {
     public ResponseEntity<ResponseUsers> retriveMembers();
     public ResponseEntity<ResponseUser> retriveMember(String user) throws Exception;
-    public ResponseEntity<ResponseUser> postMember(RequestUser requestMember);
+    public ResponseEntity<ResponseUser> postMember(RequestUser requestMember) throws Exception;
     public ResponseEntity<ResponseUser> deleteMember(String user) throws Exception;
 }

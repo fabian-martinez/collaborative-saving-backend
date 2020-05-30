@@ -1,12 +1,12 @@
 package com.colaborativesaving.demo.shares.repository;
 
-import com.colaborativesaving.demo.shares.model.StockDB;
+import com.colaborativesaving.demo.shares.model.UserStock;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
-public interface StockRepository extends CrudRepository<StockDB,Long> {
-    public StockDB findByUserAndShare(String user,String share);
-    public List<StockDB> findByUser(String user);
-    public List<StockDB> findByShare(String share);
+public interface StockRepository extends CrudRepository<UserStock,Long> {
+    public UserStock findByUserIdAndShareId(long user, long share);
+    public List<UserStock> findByUserId(long user);
+    public List<UserStock> findByShareId(long share);
 }

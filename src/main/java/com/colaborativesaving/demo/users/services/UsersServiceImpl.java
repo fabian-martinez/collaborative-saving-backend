@@ -1,10 +1,10 @@
 package com.colaborativesaving.demo.users.services;
 
-import com.colaborativesaving.demo.users.controllers.contracts.ResponseUser;
-import com.colaborativesaving.demo.users.controllers.contracts.ResponseUsers;
-import com.colaborativesaving.demo.users.model.User;
-import com.colaborativesaving.demo.users.model.UserStatusEnum;
-import com.colaborativesaving.demo.users.repository.UserDB;
+import com.colaborativesaving.demo.loans.model.Loan;
+import com.colaborativesaving.demo.loans.repository.LoanRepository;
+import com.colaborativesaving.demo.shares.model.UserStock;
+import com.colaborativesaving.demo.shares.repository.StockRepository;
+import com.colaborativesaving.demo.users.model.*;
 import com.colaborativesaving.demo.users.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,41 +19,50 @@ public class UsersServiceImpl implements UsersService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private LoanRepository loanRepository;
+
+    @Autowired
+    private StockRepository stockRepository;
+
     @Override
-    public List<User> getUsers() {
-
-        List<User> users = new ArrayList<User>();
-        userRepository.findAll().forEach(userDB -> {
-            try {
-                users.add(userDB.getUser());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-
-        return users;
+    public UsersMapper getUsers() {
+        List<User> users = new ArrayList<>();
+        userRepository.findAll().forEach(users::add);
+        return new UsersMapper(users);
     }
 
     @Override
-    public User getUser(String userName) throws Exception {
-        User user = userRepository.findByUserName(userName).getUser();
-        return user;
+    public UserMapperWithGeneralInfo getUser(String userName) throws Exception {
+        User user = userRepository.findByUserName(userName);
+        List<Loan> loans = loanRepository.findByUserId(user.getId());
+        List<UserStock> userStocks = stockRepository.findByUserId(user.getId());
+
+        double totalLoans = 0;
+        double totalStocks = 0;
+
+        if (loans != null){
+            totalLoans = loans.stream().mapToDouble(Loan::getTotal).sum();
+        }
+        if (loans != null){
+            totalStocks = userStocks.stream().mapToDouble(userStock ->
+                    userStock.getCnt() * userStock.getShare().getValue()).sum();
+        }
+
+        return new UserMapperWithGeneralInfo(user, totalLoans,totalStocks);
     }
 
     @Override
-    public User createUser(User user) {
-        UserDB userDB = new UserDB();
-        user.setStatus(UserStatusEnum.FREE);
-        user.setUpdate(new Date());
-        userDB.setUser(user);
-        userRepository.save(userDB);
-        return user;
+    public UserMapperWithGeneralInfo createUser(User user) throws Exception {
+        user.setStatus(UserStatusEnum.FREE.getCode());
+        user.setUpdate(new Date().getTime());
+        return new UserMapperWithGeneralInfo(userRepository.save(user));
     }
 
     @Override
-    public User deleteUser(String userName) throws Exception {
-        UserDB deletedUser = userRepository.findByUserName(userName);
+    public UserMapperWithGeneralInfo deleteUser(String userName) throws Exception {
+        User deletedUser = userRepository.findByUserName(userName);
         userRepository.delete(deletedUser);
-        return deletedUser.getUser();
+        return new UserMapperWithGeneralInfo(deletedUser);
     }
 }

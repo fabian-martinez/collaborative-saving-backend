@@ -1,23 +1,62 @@
 package com.colaborativesaving.demo.loans.model;
 
-import com.colaborativesaving.demo.loans.repository.LoanRepository;
-import com.colaborativesaving.demo.users.model.User;
-import org.springframework.beans.factory.annotation.Autowired;
 
+import com.colaborativesaving.demo.users.model.User;
+import org.hibernate.annotations.GenericGenerator;
+
+import javax.persistence.*;
+import java.util.UUID;
+
+@Entity
+@Table(name = "loan")
 public class Loan {
+
+    @Id
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+            name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator"
+    )
+    @Column(name = "id", updatable = false, nullable = false)
+    private UUID id;
+
+    @ManyToOne(optional = false)
     private User user;
+
+    @ManyToOne
     private LoanType loanType;
+
+    @Column(name = "payment")
     private double payment;
+
+    @Column(name = "installment_value")
     private double installmentValue;
+
+    @Column(name = "total")
     private double total;
+
+    @Column(name = "balance")
     private double balance;
+
+    @Column(name = "total_installment")
     private int totalInstallments;
+
+    @Column(name = "pendings_installment")
     private int pendingInstallments;
+
+    @Column(name = "interest")
     private double interest;
 
-    @Autowired
-    private LoanRepository loanRepository;
+    @Column(name = "state")
+    private int state;
 
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
 
     public User getUser() {
         return user;
@@ -79,8 +118,8 @@ public class Loan {
         return interest;
     }
 
-    public void setInterest(double shorterest) {
-        this.interest = shorterest;
+    public void setInterest(double interest) {
+        this.interest = interest;
     }
 
     public double getPayment() {
@@ -89,5 +128,13 @@ public class Loan {
 
     public void setPayment(double payment) {
         this.payment = payment;
+    }
+
+    public int getState() {
+        return state;
+    }
+
+    public void setState(int state) {
+        this.state = state;
     }
 }

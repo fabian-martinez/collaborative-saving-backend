@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/shares")
-public class UserShareControllerImpl implements UserShareController {
+public class SockTransactionsControllerImpl implements SockTransactionsController {
 
     @Autowired
     SharesService sharesService;

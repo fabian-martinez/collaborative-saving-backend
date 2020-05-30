@@ -21,6 +21,10 @@ public class LoanControllerImpl implements LoanController {
         return new ResponseEntity<ResponseLoanID>(new ResponseLoanID(loansService.createLoan(requestLoan)), HttpStatus.OK);
     }
 
+    @GetMapping("user/{userName}")
+    public ResponseEntity<ResponseLoans> getLoansForUserName(@PathVariable(name = "userName") String userName){
+        return new ResponseEntity<ResponseLoans>(new ResponseLoans(loansService.getLoansForUser(userName)),HttpStatus.OK);
+    }
 
 
     @PutMapping("{loanId}")
@@ -29,11 +33,10 @@ public class LoanControllerImpl implements LoanController {
         return new ResponseEntity<ResponseLoan>(new ResponseLoan(loansService.updateLoan(requestLoan,UUID.fromString(loanId))),HttpStatus.OK);
     }
 
-
     @PostMapping("{loanId}/amortization")
     public ResponseEntity<ResponseAmortization> amortizateLoan(
             @RequestBody RequestAmortization amortization, @PathVariable(value = "loanId") String loanId) throws Exception {
-        return new ResponseEntity<ResponseAmortization>(new ResponseAmortization(loansService.amortizeLoan(amortization, UUID.fromString(loanId))),HttpStatus.OK);
+            return new ResponseEntity<ResponseAmortization>(new ResponseAmortization(loansService.amortizeLoan(amortization, UUID.fromString(loanId))),HttpStatus.OK);
     }
 
     @GetMapping("{loanId}/amortization")

@@ -2,11 +2,7 @@ package com.colaborativesaving.demo.loans.services;
 
 import com.colaborativesaving.demo.loans.controllers.contracts.RequestAmortization;
 import com.colaborativesaving.demo.loans.controllers.contracts.RequestLoan;
-import com.colaborativesaving.demo.loans.controllers.contracts.ResponseAmortization;
-import com.colaborativesaving.demo.loans.model.Amortization;
-import com.colaborativesaving.demo.loans.model.Installment;
-import com.colaborativesaving.demo.loans.model.Loan;
-import com.colaborativesaving.demo.loans.model.LoanType;
+import com.colaborativesaving.demo.loans.model.*;
 import com.colaborativesaving.demo.loans.model.operators.AmortizationCalc;
 import com.colaborativesaving.demo.loans.repository.*;
 import com.colaborativesaving.demo.users.repository.UserRepository;
@@ -15,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -33,9 +30,6 @@ public class LoansServiceImpl implements LoansService {
     private InstallmentRepository installmentRepository;
 
     @Autowired
-    private UsersService usersService;
-
-    @Autowired
     private UserRepository userRepository;
 
     @Autowired
@@ -45,9 +39,9 @@ public class LoansServiceImpl implements LoansService {
     @Override
     public List<LoanType> getTypes() {
         List<LoanType> loanTypeList = new ArrayList<LoanType>();
-        loanTypeRepository.findAll().forEach(loanTypeDB -> {
+        loanTypeRepository.findAll().forEach(loanType -> {
             try {
-                loanTypeList.add(loanTypeDB.getLoanType());
+                loanTypeList.add(loanType);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -58,72 +52,87 @@ public class LoansServiceImpl implements LoansService {
 
     @Override
     public LoanType createType(LoanType type) {
-        LoanTypeDB loanTypeDB = new LoanTypeDB();
-        loanTypeDB.setLoanTypeName(type.getLoanTypeName());
-        loanTypeDB.setMaxNumberInstallments(type.getMaxNumberInstallments());
-        loanTypeDB.setMinInstallmentValue(type.getMinInstallmentValue());
-        loanTypeDB.setInterest(type.getInterest());
-        loanTypeRepository.save(loanTypeDB);
+        LoanType loanType = new LoanType();
+        loanType.setLoanTypeName(type.getLoanTypeName());
+        loanType.setMaxNumberInstallments(type.getMaxNumberInstallments());
+        loanType.setMinInstallmentValue(type.getMinInstallmentValue());
+        loanType.setInterest(type.getInterest());
+        loanTypeRepository.save(loanType);
         return type;
     }
 
     @Override
     public LoanType getType(String loanTypeName) {
-        LoanType loanType = loanTypeRepository.findByLoanTypeName(loanTypeName).getLoanType();
+        LoanType loanType = loanTypeRepository.findByLoanTypeName(loanTypeName);
         return loanType;
     }
 
     @Override
-    public LoanType deleteType(String loanTypeName) {
-        LoanTypeDB loanTypeDB = loanTypeRepository.findByLoanTypeName(loanTypeName);
-        loanTypeRepository.delete(loanTypeDB);
-        return loanTypeDB.getLoanType();
+    public List<LoanMapper> getLoansForUser(String username) {
+        List<LoanMapper> loanMappers = new ArrayList<>();
+        loanRepository.findByUserId(
+                userRepository.findByUserName(username).getId()
+        ).forEach(loan -> {
+            try {
+                loanMappers.add(new LoanMapper(loan));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+        return loanMappers;
     }
 
     @Override
-    public UUID createLoan(RequestLoan loan) throws Exception {
-        LoanDB loanDB = new LoanDB();
-        loanDB.setUser(userRepository.findByUserName(loan.getUserName()));
-        loanDB.setLoanType(loanTypeRepository.findByLoanTypeName(loan.getLoanType()));
-        loanDB.setInterest(loanTypeRepository.findByLoanTypeName(loan.getLoanType()).getInterest());
-        loanDB.setTotal(loan.getTotal());
-        loanDB.setBalance(loan.getAdvance());
-        return loanRepository.save(loanDB).getId();
+    public LoanType deleteType(String loanTypeName) {
+        LoanType loanType = loanTypeRepository.findByLoanTypeName(loanTypeName);
+        loanTypeRepository.delete(loanType);
+        return loanType;
+    }
+
+    @Override
+    public UUID createLoan(RequestLoan requestLoan) throws Exception {
+        Loan loan = new Loan();
+        loan.setUser(userRepository.findByUserName(requestLoan.getUserName()));
+        loan.setLoanType(loanTypeRepository.findByLoanTypeName(requestLoan.getLoanType()));
+        loan.setInterest(loanTypeRepository.findByLoanTypeName(requestLoan.getLoanType()).getInterest());
+        loan.setTotal(requestLoan.getTotal());
+        loan.setBalance(requestLoan.getAdvance());
+        loan.setState(LoanStateEnum.PAYING_OUT.getCode());
+        return loanRepository.save(loan).getId();
     }
 
     @Override
     public Loan updateLoan(RequestLoan requestLoan, UUID loanId) throws Exception {
-        LoanDB loanDB = loanRepository.findById(loanId);
-        double balance = loanDB.getBalance() + requestLoan.getAdvance();
-        loanDB.setBalance(balance);
+        Loan loan = loanRepository.findById(loanId);
+        double balance = loan.getBalance() + requestLoan.getAdvance();
+        loan.setBalance(balance);
         if (requestLoan.getTotal() >= balance)
-            loanDB.setTotal(requestLoan.getTotal());
-        return loanRepository.save(loanDB).getLoan();
+            loan.setTotal(requestLoan.getTotal());
+        return loanRepository.save(loan);
     }
 
     @Override
-    public Amortization amortizeLoan(RequestAmortization amortization, UUID loanId) throws Exception {
-        Loan loan = loanRepository.findById(loanId).getLoan();
+    public Amortization amortizeLoan(RequestAmortization requestAmortization, UUID loanId) throws Exception {
+        Loan loan = loanRepository.findById(loanId);
         loan.setTotal(loan.getBalance());
-        if (amortization.getNumberInstallments() > 0 && amortization.getInstallmentValue() > 0) {
-            amortizationCalc.Amortize(loan,amortization.getInstallmentValue(),amortization.getNumberInstallments());
-        } else if (amortization.getNumberInstallments() > 0){
-            amortizationCalc.Amortize(loan,amortization.getNumberInstallments());
-        } else if (amortization.getInstallmentValue() > 0){
-            amortizationCalc.Amortize(loan,amortization.getInstallmentValue());
+        if (requestAmortization.getNumberInstallments() > 0 && requestAmortization.getInstallmentValue() > 0) {
+            amortizationCalc.Amortize(loan,requestAmortization.getInstallmentValue(),requestAmortization.getNumberInstallments());
+        } else if (requestAmortization.getNumberInstallments() > 0){
+            amortizationCalc.Amortize(loan,requestAmortization.getNumberInstallments());
+        } else if (requestAmortization.getInstallmentValue() > 0){
+            amortizationCalc.Amortize(loan,requestAmortization.getInstallmentValue());
         } else {
-          //TODO: error
+          throw new InvalidParameterException();
         }
-        LoanDB loanDB = loanRepository.findById(loanId);
-        Amortization amortization_ = new Amortization(loanRepository.save(loanDB).getLoan(),amortizationCalc.getAmortization(loan));
-        installmentRepository.deleteByLoanDBId(loanDB.getId());
-        for (Installment installment : amortization_.getInstallments()){
-            InstallmentsDB installmentDB = new InstallmentsDB();
-            installmentDB.setLoanDB(loanDB);
-            installmentDB.setInstallment(installment);
-            installmentRepository.save(installmentDB);
+
+        //Elimina amortizaciones anteriores
+        installmentRepository.deleteByLoanId(loan.getId());
+        //
+        loan.setState(LoanStateEnum.PAYING.getCode());
+        Amortization amortization = new Amortization(loanRepository.save(loan),amortizationCalc.getAmortization(loan));
+        for (Installment installment : amortization.getInstallments()){
+            installmentRepository.save(installment);
         }
-        loanDB.setLoan(loan);
-        return amortization_;
+        return amortization;
     }
 }

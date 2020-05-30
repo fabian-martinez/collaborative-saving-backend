@@ -1,47 +1,78 @@
 package com.colaborativesaving.demo.loans.model;
 
-public class Installment {
-    private double balance;
-    private double abonoCapital;
-    private double interest;
-    private double total;
-    private int installmentNumber;
-    private InstalmentStateEnum instalmentState;
+import org.hibernate.annotations.GenericGenerator;
 
-    public Installment(double balance, double abonoCapital, double interest, double total, int installmentNumber) {
-        this.balance = balance;
-        this.abonoCapital = abonoCapital;
+import javax.persistence.*;
+
+@Entity
+@Table(name = "installment")
+public class Installment {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int id;
+
+    @ManyToOne(optional = false)
+    private Loan loan;
+
+    @Column(name = "state")
+    private int state;
+
+    @Column(name = "installment_value")
+    private double installmentValue;
+
+    @Column(name = "total")
+    private double total;
+
+    @Column(name = "balance")
+    private double balance;
+
+    @Column(name = "pendings_installment")
+    private int pendingInstallments;
+
+    @Column(name = "interest")
+    private double interest;
+
+    public Installment(Loan loan, double balace, double installmentValue, double interest, double total, int pendingInstallment) {
+        this.balance = balace;
+        this.installmentValue = installmentValue;
         this.interest = interest;
         this.total = total;
-        this.installmentNumber = installmentNumber;
-        this.instalmentState = InstalmentStateEnum.PENDING;
+        this.pendingInstallments = pendingInstallment;
+        this.state = InstalmentStateEnum.PENDING.getCode();
+        this.loan = loan;
     }
 
-    public Installment() {
+    public int getId() {
+        return id;
     }
 
-    public double getBalance() {
-        return balance;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public void setBalance(double balance) {
-        this.balance = balance;
+    public Loan getLoan() {
+        return loan;
     }
 
-    public double getAbonoCapital() {
-        return abonoCapital;
+    public void setLoan(Loan loan) {
+        this.loan = loan;
     }
 
-    public void setAbonoCapital(double abonoCapital) {
-        this.abonoCapital = abonoCapital;
+    public int getState() {
+        return state;
     }
 
-    public double getInterest() {
-        return interest;
+    public void setState(int state) {
+        this.state = state;
     }
 
-    public void setInterest(double shorterest) {
-        this.interest = shorterest;
+    public double getInstallmentValue() {
+        return installmentValue;
+    }
+
+    public void setInstallmentValue(double installmentValue) {
+        this.installmentValue = installmentValue;
     }
 
     public double getTotal() {
@@ -52,30 +83,28 @@ public class Installment {
         this.total = total;
     }
 
-    public int getInstallmentNumber() {
-        return installmentNumber;
+    public double getBalance() {
+        return balance;
     }
 
-    public void setInstallmentNumber(int installmentNumber) {
-        this.installmentNumber = installmentNumber;
+    public void setBalance(double balance) {
+        this.balance = balance;
     }
 
-    public InstalmentStateEnum getInstalmentState() {
-        return instalmentState;
+    public int getPendingInstallments() {
+        return pendingInstallments;
     }
 
-    public void setInstalmentState(InstalmentStateEnum instalmentState) {
-        this.instalmentState = instalmentState;
+    public void setPendingInstallments(int pendingInstallments) {
+        this.pendingInstallments = pendingInstallments;
     }
 
-    @Override
-    public String toString() {
-        return "Installment:{" +
-                "balance:" + balance +
-                ", abonoCapital:" + abonoCapital +
-                ", interest:" + interest +
-                ", total:" + total +
-                ", installmentNumber:" + installmentNumber +
-                '}';
+    public double getInterest() {
+        return interest;
     }
+
+    public void setInterest(double interest) {
+        this.interest = interest;
+    }
+
 }

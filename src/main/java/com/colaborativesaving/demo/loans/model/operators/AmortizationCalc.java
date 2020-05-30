@@ -34,7 +34,6 @@ public class AmortizationCalc {
     }
 
     public void Amortize(Loan loan, double installmentValue){
-
         double totalLoan = loan.getTotal();
         int installmentsNumber = (int) Math.ceil(totalLoan/installmentValue);
         double iniInstallment = totalLoan - installmentValue*(installmentsNumber-1);
@@ -46,24 +45,24 @@ public class AmortizationCalc {
 
     public List<Installment> getAmortization(Loan loan){
         List<Installment> installments = new ArrayList<Installment>();
-        installments.add(getIniInstallment(loan.getPayment(),loan.getTotal(),loan.getInterest()));
+        installments.add(getIniInstallment(loan));
         double balace = loan.getTotal() - loan.getPayment();
         for (int i = 1 ; i < loan.getTotalInstallments(); i++){
             double interest = balace*(loan.getInterest()/100);
             double total = interest + loan.getInstallmentValue();
             balace = balace - loan.getInstallmentValue();
-            installments.add(new Installment(balace,loan.getInstallmentValue(),interest,total,i+1));
+            installments.add(new Installment(loan, balace,loan.getInstallmentValue(),interest,total,i+1));
         }
         return installments;
     }
 
-    private Installment getIniInstallment(double iniInstalmentValue, double totalLoan, double interest){
-        interest = interest/100.0;
-        double balace = totalLoan - iniInstalmentValue;
-        double interestValue = Math.round(totalLoan*interest);
-        double total = iniInstalmentValue+interestValue;
+    private Installment getIniInstallment(Loan loan){
+        double interest = loan.getInterest()/100.0;
+        double balace = loan.getTotal() - loan.getPayment();
+        double interestValue = Math.round(loan.getTotal()*interest);
+        double total = loan.getInstallmentValue()+interestValue;
 
-        return new Installment(balace,iniInstalmentValue,interestValue,total,1);
+        return new Installment(loan,balace,loan.getPayment(),interestValue,total,1);
     }
 
 }

@@ -1,23 +1,61 @@
 package com.colaborativesaving.demo.shares.controllers.contracts;
 
 import com.colaborativesaving.demo.shares.model.UserStock;
-
-import java.util.List;
+import com.colaborativesaving.demo.shares.model.UserStockMapper;
 
 public class ResponseUserStock {
 
-    private UserStock userStock;
+    private String user;
+    private String share;
+    private double contribution;
+    private int cnt;
+    private double value;
 
-    public ResponseUserStock(UserStock purchaseStock) {
-        this.userStock = purchaseStock;
+    public ResponseUserStock(UserStockMapper userStock) {
+       this.user = userStock.getUser();
+       this.share = userStock.getShare();
+       this.contribution = userStock.getContribution();
+       this.cnt = userStock.getCnt();
+       this.value = userStock.getValue();
     }
 
-
-    public UserStock getUserStock() {
-        return userStock;
+    public String getUser() {
+        return user;
     }
 
-    public void setUserStock(UserStock userStock) {
-        this.userStock = userStock;
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    public String getShare() {
+        return share;
+    }
+
+    public void setShare(String share) {
+        this.share = share;
+    }
+
+    public int getCnt() {
+        return cnt;
+    }
+
+    public void setCnt(int cnt) {
+        this.cnt = cnt;
+    }
+
+    public double getValue() {
+        return value;
+    }
+
+    public void setValue(double value) {
+        this.value = value;
+    }
+
+    public double getContribution() {
+        return contribution;
+    }
+
+    public void setContribution(double contribution) {
+        this.contribution = contribution;
     }
 }

@@ -1,25 +1,44 @@
 package com.colaborativesaving.demo.shares.model;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+
+@Entity
+@Table(name = "shares")
 public class ShareType {
-    private String shareName;
-    private int cnt;
-    private double contribution;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
+
+    @NotNull
+    @Column(name = "name", unique = true)
+    private String name;
+
+    @Column(name = "value")
     private double value;
 
-    public String getShareName() {
-        return shareName;
+    @Column(name = "contribution")
+    private double contribution;
+
+    @Column(name = "cnt")
+    private int cnt;
+
+
+    public String getName() {
+        return name;
     }
 
-    public void setShareName(String shareName) {
-        this.shareName = shareName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public int getCnt() {
-        return cnt;
+    public double getValue() {
+        return value;
     }
 
-    public void setCnt(int cnt) {
-        this.cnt = cnt;
+    public void setValue(double value) {
+        this.value = value;
     }
 
     public double getContribution() {
@@ -30,11 +49,19 @@ public class ShareType {
         this.contribution = contribution;
     }
 
-    public double getValue() {
-        return value;
+    public int getCnt() {
+        return cnt;
     }
 
-    public void setValue(double value) {
-        this.value = value;
+    public void setCnt(int cnt) {
+        this.cnt = cnt;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 }

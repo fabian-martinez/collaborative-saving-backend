@@ -24,7 +24,7 @@ public class RequestShareType {
 
     public ShareType getShareType() {
         ShareType shareType = new ShareType();
-        shareType.setShareName(this.name);
+        shareType.setName(this.name);
         shareType.setContribution(this.contribution);
         return shareType;
     }

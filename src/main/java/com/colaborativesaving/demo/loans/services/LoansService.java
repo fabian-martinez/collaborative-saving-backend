@@ -5,6 +5,7 @@ import com.colaborativesaving.demo.loans.controllers.contracts.RequestLoan;
 import com.colaborativesaving.demo.loans.controllers.contracts.ResponseAmortization;
 import com.colaborativesaving.demo.loans.model.Amortization;
 import com.colaborativesaving.demo.loans.model.Loan;
+import com.colaborativesaving.demo.loans.model.LoanMapper;
 import com.colaborativesaving.demo.loans.model.LoanType;
 
 import java.util.List;
@@ -14,6 +15,7 @@ public interface LoansService {
     public List<LoanType> getTypes();
     public LoanType createType(LoanType type);
     public LoanType getType(String loanTypeName);
+    public List<LoanMapper> getLoansForUser(String username);
     public LoanType deleteType(String loanTypeName);
     public UUID createLoan(RequestLoan loan) throws Exception;
     public Loan updateLoan(RequestLoan loan, UUID loanId) throws Exception;

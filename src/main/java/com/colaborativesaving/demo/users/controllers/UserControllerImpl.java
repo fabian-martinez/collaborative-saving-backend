@@ -25,11 +25,11 @@ public class UserControllerImpl implements UserController{
     @GetMapping("{user}")
     public ResponseEntity<ResponseUser> retriveMember(@PathVariable(value = "user") String user) throws Exception {
         return new ResponseEntity<ResponseUser>(
-                new ResponseUser(usersService.getUser(user)), HttpStatus.OK);
+               new ResponseUser(usersService.getUser(user)) , HttpStatus.OK);
     }
 
     @PostMapping("")
-    public ResponseEntity<ResponseUser> postMember(@RequestBody RequestUser requestUser){
+    public ResponseEntity<ResponseUser> postMember(@RequestBody RequestUser requestUser) throws Exception {
         return new ResponseEntity<ResponseUser>(
                 new ResponseUser(usersService.createUser(requestUser.getUser())), HttpStatus.OK);
     }

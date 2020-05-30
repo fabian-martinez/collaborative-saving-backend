@@ -3,11 +3,11 @@ package com.colaborativesaving.demo.shares.services;
 import com.colaborativesaving.demo.shares.controllers.contracts.RequestStock;
 import com.colaborativesaving.demo.shares.model.ShareType;
 import com.colaborativesaving.demo.shares.model.UserStock;
-import com.colaborativesaving.demo.shares.repository.ShareTypeDB;
+import com.colaborativesaving.demo.shares.model.UserStockMapper;
 import com.colaborativesaving.demo.shares.repository.ShareTypeRepository;
-import com.colaborativesaving.demo.shares.model.StockDB;
 import com.colaborativesaving.demo.shares.repository.StockRepository;
 import com.colaborativesaving.demo.users.model.User;
+import com.colaborativesaving.demo.users.repository.UserRepository;
 import com.colaborativesaving.demo.users.services.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,27 +25,28 @@ public class SharesServiceImpl implements SharesService {
     private StockRepository stockRepository;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private UsersService usersService;
 
     @Override
     public ShareType createShareType(ShareType shareType) {
-        ShareTypeDB shareTypeDB = new ShareTypeDB();
-        shareTypeDB.setShareType(shareType);
-        return shareTypeRepository.save(shareTypeDB).getshareType();
+        return shareTypeRepository.save(shareType);
     }
 
     @Override
     public ShareType getShareType(String shareName) {
-        ShareTypeDB shareTypeDB = shareTypeRepository.findByName(shareName);
-        return shareTypeDB.getshareType();
+        ShareType shareType = shareTypeRepository.findByName(shareName);
+        return shareType;
     }
 
     @Override
     public List<ShareType> getShareTypes() {
         List<ShareType> shares = new ArrayList<ShareType>();
-        shareTypeRepository.findAll().forEach(shareDB -> {
+        shareTypeRepository.findAll().forEach(share -> {
             try {
-                shares.add(shareDB.getshareType());
+                shares.add(share);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -55,66 +56,55 @@ public class SharesServiceImpl implements SharesService {
 
     @Override
     public ShareType setShareType(String shareName, ShareType shareType) {
-        ShareTypeDB shareTypeDB = shareTypeRepository.findByName(shareName);
+        ShareType shareTypeDB = shareTypeRepository.findByName(shareName);
         shareTypeDB.setContribution(shareType.getContribution());
-        return shareTypeRepository.save(shareTypeDB).getshareType();
+        return shareTypeRepository.save(shareTypeDB);
     }
 
     @Override
-    public UserStock purchaseStock(RequestStock requestStock) throws Exception {
-        try {
-            User user = usersService.getUser(requestStock.getUserName());
-            ShareType shareType = this.getShareType(requestStock.getShareType());
-            UserStock stock = stockRepository.findByUserAndShare(
-                    user.getUserName(),shareType.getShareName()).getUserStock();
-            stock.setCnt(stock.getCnt() + requestStock.getCnt());
-            StockDB stockDB = stockRepository.findByUserAndShare(user.getUserName(),shareType.getShareName());
-            stockDB.setUserStock(stock);
-            return stockRepository.save(stockDB).getUserStock();
-        } catch (IllegalArgumentException ex){
-            User user = usersService.getUser(requestStock.getUserName());
-            ShareType shareType = this.getShareType(requestStock.getShareType());
-            UserStock stock = new UserStock();
-            stock.setUser(user);
-            stock.setShare(shareType);
-            stock.setCnt(requestStock.getCnt());
-            return stockRepository.save(new StockDB(stock)).getUserStock();
+    public UserStockMapper purchaseStock(RequestStock requestStock) throws Exception {
+        User user = userRepository.findByUserName(requestStock.getUserName());
+        ShareType shareType = this.getShareType(requestStock.getShareType());
+        UserStock userStock = stockRepository.findByUserIdAndShareId(user.getId(),shareType.getId());
+        if (userStock == null){
+            userStock = new UserStock();
         }
+        userStock.setUser(user);
+        userStock.setShare(shareType);
+        userStock.setCnt(userStock.getCnt() + requestStock.getCnt());
+        return new UserStockMapper(stockRepository.save(userStock));
     }
 
     @Override
-    public UserStock retireStock(RequestStock requestRetireStock) {
-        try {
-            User user = usersService.getUser(requestRetireStock.getUserName());
-            ShareType shareType = this.getShareType(requestRetireStock.getShareType());
-            UserStock stock = stockRepository.findByUserAndShare(
-                    user.getUserName(),shareType.getShareName()).getUserStock();
-            StockDB stockDB = stockRepository.findByUserAndShare(user.getUserName(),shareType.getShareName());
-            if (stock.getCnt() == requestRetireStock.getCnt()){
-                stockRepository.delete(stockDB);
-                return stockDB.getUserStock();
-            }else {
-                stock.setCnt(stock.getCnt() - requestRetireStock.getCnt());
-                stockDB.setUserStock(stock);
-                return stockRepository.save(stockDB).getUserStock();
-            }
-
-        } catch (Exception e) {
-            throw new Error("Error");
+    public UserStockMapper retireStock(RequestStock requestStock) {
+        User user = userRepository.findByUserName(requestStock.getUserName());
+        ShareType shareType = this.getShareType(requestStock.getShareType());
+        UserStock userStock = stockRepository.findByUserIdAndShareId(user.getId(),shareType.getId());
+        if (userStock.getCnt() == requestStock.getCnt()){
+            stockRepository.delete(userStock);
+            return null;
+        }else {
+            userStock.setCnt(userStock.getCnt() - requestStock.getCnt());
+            return new UserStockMapper(stockRepository.save(userStock));
         }
+
     }
 
     @Override
-    public UserStock getStockForUser(String userName, String shareName) throws Exception {
-        return stockRepository.findByUserAndShare(userName,shareName).getUserStock();
+    public UserStockMapper getStockForUser(String userName, String shareName) throws Exception {
+        //TODO: Validar cual es share y  cual es user
+        User user = userRepository.findByUserName(userName);
+        ShareType shareType = this.getShareType(shareName);
+        return new UserStockMapper(stockRepository.findByUserIdAndShareId(user.getId(),shareType.getId()));
     }
 
     @Override
-    public List<UserStock> getAllStocksForUser(String userName) {
-        List<UserStock> userStocks = new ArrayList<>();
-        stockRepository.findByShare(userName).forEach(stockDB -> {
+    public List<UserStockMapper> getAllStocksForUser(String userName) {
+        User user = userRepository.findByUserName(userName);
+        List<UserStockMapper> userStocks = new ArrayList<>();
+        stockRepository.findByUserId(user.getId()).forEach(stock -> {
             try {
-                userStocks.add(stockDB.getUserStock());
+                userStocks.add(new UserStockMapper(stock));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -123,11 +113,12 @@ public class SharesServiceImpl implements SharesService {
     }
 
     @Override
-    public List<UserStock> getAllStocksForShareType(String shareName) {
-        List<UserStock> userStocks = new ArrayList<>();
-        stockRepository.findByShare(shareName).forEach(stockDB -> {
+    public List<UserStockMapper> getAllStocksForShareType(String shareName) throws Exception {
+        List<UserStockMapper> userStocks = new ArrayList<>();
+        ShareType shareType = shareTypeRepository.findByName(shareName);
+        stockRepository.findByShareId(shareType.getId()).forEach(stock -> {
             try {
-                userStocks.add(stockDB.getUserStock());
+                userStocks.add(new UserStockMapper(stock));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -136,11 +127,11 @@ public class SharesServiceImpl implements SharesService {
     }
 
     @Override
-    public List<UserStock> getAllStocks() {
-        List<UserStock> userStocks = new ArrayList<>();
-        stockRepository.findAll().forEach(stockDB -> {
+    public List<UserStockMapper> getAllStocks() {
+        List<UserStockMapper> userStocks = new ArrayList<>();
+        stockRepository.findAll().forEach(stock -> {
             try {
-                userStocks.add(stockDB.getUserStock());
+                userStocks.add(new UserStockMapper(stock));
             } catch (Exception e) {
                 e.printStackTrace();
             }
