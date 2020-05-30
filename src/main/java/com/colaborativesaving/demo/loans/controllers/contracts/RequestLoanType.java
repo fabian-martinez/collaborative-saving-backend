@@ -5,15 +5,15 @@ import com.colaborativesaving.demo.loans.model.LoanType;
 public class RequestLoanType {
 
     private String name;
-    private int number;
-    private double installment;
+    private int maxInstallmenNumber;
+    private double minInstallmentValue;
     private double interest;
 
     public LoanType getType() {
         LoanType loanType = new LoanType();
         loanType.setLoanTypeName(this.name);
-        loanType.setMaxNumberInstallments(this.number);
-        loanType.setMinInstallmentValue(this.installment);
+        loanType.setMaxNumberInstallments(this.maxInstallmenNumber);
+        loanType.setMinInstallmentValue(this.minInstallmentValue);
         loanType.setInterest(this.interest);
         return loanType;
     }
@@ -22,13 +22,13 @@ public class RequestLoanType {
 
     public void setName(String name) { this.name = name; }
 
-    public int getNumber() { return number; }
+    public int getMaxInstallmenNumber() { return maxInstallmenNumber; }
 
-    public void setNumber(int number) { this.number = number; }
+    public void setMaxInstallmenNumber(int maxInstallmenNumber) { this.maxInstallmenNumber = maxInstallmenNumber; }
 
-    public double getInstallment() { return installment; }
+    public double getMinInstallmentValue() { return minInstallmentValue; }
 
-    public void setInstallment(long installment) { this.installment = installment; }
+    public void setMinInstallmentValue(long minInstallmentValue) { this.minInstallmentValue = minInstallmentValue; }
 
     public double getInterest() {
         return interest;

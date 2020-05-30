@@ -10,6 +10,7 @@ import com.colaborativesaving.demo.users.model.User;
 import com.colaborativesaving.demo.users.repository.UserRepository;
 import com.colaborativesaving.demo.users.services.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -91,10 +92,13 @@ public class SharesServiceImpl implements SharesService {
     }
 
     @Override
-    public UserStockMapper getStockForUser(String userName, String shareName) throws Exception {
+    public UserStockMapper getStockForUserAndShare(String userName, String shareName) throws Exception {
         //TODO: Validar cual es share y  cual es user
         User user = userRepository.findByUserName(userName);
         ShareType shareType = this.getShareType(shareName);
+        if (user == null || shareType == null){
+            throw new ChangeSetPersister.NotFoundException();
+        }
         return new UserStockMapper(stockRepository.findByUserIdAndShareId(user.getId(),shareType.getId()));
     }
 
@@ -113,10 +117,9 @@ public class SharesServiceImpl implements SharesService {
     }
 
     @Override
-    public List<UserStockMapper> getAllStocksForShareType(String shareName) throws Exception {
+    public List<UserStockMapper> getAllStocks() {
         List<UserStockMapper> userStocks = new ArrayList<>();
-        ShareType shareType = shareTypeRepository.findByName(shareName);
-        stockRepository.findByShareId(shareType.getId()).forEach(stock -> {
+        stockRepository.findAll().forEach(stock -> {
             try {
                 userStocks.add(new UserStockMapper(stock));
             } catch (Exception e) {
@@ -127,9 +130,10 @@ public class SharesServiceImpl implements SharesService {
     }
 
     @Override
-    public List<UserStockMapper> getAllStocks() {
+    public List<UserStockMapper> getAllStocksForShare(String shareName) {
         List<UserStockMapper> userStocks = new ArrayList<>();
-        stockRepository.findAll().forEach(stock -> {
+        ShareType shareType = shareTypeRepository.findByName(shareName);
+        stockRepository.findByShareId(shareType.getId()).forEach(stock -> {
             try {
                 userStocks.add(new UserStockMapper(stock));
             } catch (Exception e) {

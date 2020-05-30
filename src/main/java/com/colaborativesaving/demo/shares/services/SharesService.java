@@ -15,8 +15,9 @@ public interface SharesService {
 
     public UserStockMapper purchaseStock(RequestStock requestStock) throws Exception;
     public UserStockMapper retireStock(RequestStock requestRetireStock);
-    public UserStockMapper getStockForUser(String userName, String shareName) throws Exception;
+
+    public UserStockMapper getStockForUserAndShare(String userName, String shareName) throws Exception;
     public List<UserStockMapper> getAllStocksForUser(String userName);
-    public List<UserStockMapper> getAllStocksForShareType(String shareName) throws Exception;
+    public List<UserStockMapper> getAllStocksForShare(String shareName);
     public List<UserStockMapper> getAllStocks();
 }

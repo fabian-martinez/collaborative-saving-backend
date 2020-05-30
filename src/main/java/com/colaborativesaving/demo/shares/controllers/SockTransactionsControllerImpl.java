@@ -26,17 +26,30 @@ public class SockTransactionsControllerImpl implements SockTransactionsControlle
                 new ResponseUserStock(sharesService.retireStock(requestRetireStock)),HttpStatus.OK);
     }
 
-    @GetMapping(value = {"{userName}/{shareName}"})
-    public ResponseEntity<ResponseUserStock> getStockForUser(
+    @GetMapping(value = {"user/{userName}/{shareName}"})
+    public ResponseEntity<ResponseUserStock> getStocksForUserAndShare(
             @PathVariable(name = "userName") String userName,@PathVariable(name = "shareName") String shareName) throws Exception {
         return new ResponseEntity<ResponseUserStock>(
-                new ResponseUserStock(sharesService.getStockForUser(userName, shareName)),HttpStatus.OK);
+                new ResponseUserStock(sharesService.getStockForUserAndShare(userName, shareName)),HttpStatus.OK);
     }
 
-    @GetMapping("{userName}")
+    @GetMapping(value = {"share/{shareName}/{shareName}"})
+    public ResponseEntity<ResponseUserStock> getStocksForShareAndUser(
+            @PathVariable(name = "userName") String userName,@PathVariable(name = "shareName") String shareName) throws Exception {
+        return new ResponseEntity<ResponseUserStock>(
+                new ResponseUserStock(sharesService.getStockForUserAndShare(userName, shareName)),HttpStatus.OK);
+    }
+
+    @GetMapping("user/{userName}")
     public ResponseEntity<ResponseUserStocks> getAllStocksForUser(@PathVariable(name = "userName") String userName) {
         return new ResponseEntity<ResponseUserStocks>(
                 new ResponseUserStocks(sharesService.getAllStocksForUser(userName)),HttpStatus.OK);
+    }
+
+    @GetMapping("share/{shareName}")
+    public ResponseEntity<ResponseUserStocks> getAllStocksForShare(@PathVariable(name = "userShare") String userName) {
+        return new ResponseEntity<ResponseUserStocks>(
+                new ResponseUserStocks(sharesService.getAllStocksForShare(userName)),HttpStatus.OK);
     }
 
     @GetMapping("")
